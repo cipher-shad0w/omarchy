@@ -4,10 +4,16 @@ HISTCONTROL=ignoreboth
 HISTSIZE=32768
 HISTFILESIZE="${HISTSIZE}"
 
-# Autocompletion
-if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
-  source /usr/share/bash-completion/bash_completion
-fi
+# Autocompletion (lazy-loaded for performance)
+_load_bash_completion() {
+  if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
+    source /usr/share/bash-completion/bash_completion
+  fi
+  complete -r _load_bash_completion 2>/dev/null
+  unset -f _load_bash_completion
+  return 124
+}
+complete -F _load_bash_completion -D
 
 # Ensure command hashing is off for mise
 set +h

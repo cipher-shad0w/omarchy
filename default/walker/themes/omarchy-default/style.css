@@ -26,6 +26,7 @@ scrollbar {
   background: alpha(@base, 0.95);
   padding: 20px;
   border: 2px solid @border;
+  border-radius: 20px;
 }
 
 .preview-box {
@@ -37,6 +38,7 @@ scrollbar {
 .search-container {
   background: @base;
   padding: 10px;
+  border-radius: 10px;
 }
 
 .input placeholder {

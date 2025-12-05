@@ -14,11 +14,24 @@ if command -v try &> /dev/null; then
   eval "$(try init ~/Work/tries)"
 fi
 
+# Lazy load FZF (key-bindings loaded on first use)
 if command -v fzf &> /dev/null; then
   if [[ -f /usr/share/fzf/completion.bash ]]; then
     source /usr/share/fzf/completion.bash
   fi
-  if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
-    source /usr/share/fzf/key-bindings.bash
-  fi
+  # Lazy load key-bindings
+  _load_fzf_keybindings() {
+    if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
+      source /usr/share/fzf/key-bindings.bash
+    fi
+    unset -f _load_fzf_keybindings
+    # Re-execute the original binding
+    if [[ -n "${READLINE_LINE}" ]]; then
+      eval "${READLINE_LINE}"
+    fi
+  }
+  # Bind common FZF shortcuts to lazy-load function
+  bind -x '"\C-r": _load_fzf_keybindings'
+  bind -x '"\C-t": _load_fzf_keybindings'
+  bind -x '"\ec": _load_fzf_keybindings'
 fi
